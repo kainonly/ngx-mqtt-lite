@@ -5,15 +5,15 @@
 var lengthOfLongestSubstring = function (s) {
     if (!s) return 0;
     const len = s.length;
-    let max = 0;
-    for (let i = 0; i < len; i++) {
-        const container = new Set(s[i]);
-        for (let j = i + 1; j < len; j++) {
-            const char = s[j];
-            if (!container.has(char)) container.add(char);
-            else break;
+    let left = 0, max = 0;
+    for (let right = 0; right < len; right++) {
+        const char = s[right];
+        const index = s.slice(left, right).indexOf(char);
+        if (index === -1) {
+            max = Math.max(max, right - left + 1);
+        } else {
+            left += index + 1;
         }
-        if (container.size > max) max = container.size;
     }
     return max;
 };
@@ -24,3 +24,4 @@ console.log(lengthOfLongestSubstring('pwwkew'));
 console.log(lengthOfLongestSubstring(''));
 console.log(lengthOfLongestSubstring('au'));
 console.log(lengthOfLongestSubstring('aab'));
+console.log(lengthOfLongestSubstring('bbtablud'));
