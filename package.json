@@ -1,7 +1,8 @@
 {
   "name": "leetcode",
   "version": "1.0.0",
-  "dependencies": {
-    
+  "dependencies": {},
+  "devDependencies": {
+    "prettier": "^1.17.1"
   }
 }
