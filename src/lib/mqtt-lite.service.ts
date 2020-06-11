@@ -1,16 +1,39 @@
 import { Injectable } from '@angular/core';
 import { IClientOptions } from 'mqtt';
-import { Client } from './client';
+import { IStoreOptions } from 'mqtt/types/lib/store-options';
+import { NgxMqttClient } from './ngx-mqtt-client';
+import { NgxMqttStore } from './ngx-mqtt-store';
 
 @Injectable()
 export class MqttLiteService {
-  client: Map<string, Client> = new Map<string, Client>();
+  private clients: Map<string, NgxMqttClient> = new Map<string, NgxMqttClient>();
+  private stores: Map<string, NgxMqttStore> = new Map<string, NgxMqttStore>();
 
-  set(id: string, host: string, option?: IClientOptions) {
-    this.client.set(id, new Client(host, option));
+  /**
+   * Register MQTT broker
+   */
+  registerClient(id: string, host: string, option?: IClientOptions) {
+    this.clients.set(id, new NgxMqttClient(host, option));
   }
 
-  get(id: string): Client {
-    return this.client.get(id);
+  /**
+   * Get MQTT broker
+   */
+  client(id: string): NgxMqttClient {
+    return this.clients.get(id);
+  }
+
+  /**
+   * Register in-memory implementation of the message store
+   */
+  registerStore(id: string, option: IStoreOptions) {
+    this.stores.set(id, new NgxMqttStore(option));
+  }
+
+  /**
+   * Get message store
+   */
+  store(id: string): NgxMqttStore {
+    return this.stores.get(id);
   }
 }
