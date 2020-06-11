@@ -2,7 +2,7 @@ import { IConnectPacket } from 'mqtt-packet';
 import { IClientOptions, IClientReconnectOptions, IClientSubscribeOptions, MqttClient } from 'mqtt/types';
 import { IClientPublishOptions } from 'mqtt/types/lib/client-options';
 import { AsyncSubject, Observable, of, Subject } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ClientCreateResult, MessageResult } from './mqtt-lite.types';
 
 declare let mqtt: any;
@@ -16,13 +16,6 @@ export class NgxMqttClient {
     private host: string,
     private option?: IClientOptions
   ) {
-  }
-
-  /**
-   * Navtive Mqtt Client
-   */
-  navtive(): MqttClient {
-    return this.client;
   }
 
   /**
@@ -105,15 +98,8 @@ export class NgxMqttClient {
   /**
    * Close the client, accepts the following options
    */
-  end(force?: boolean, option?: any): Observable<any> {
-    return this.ready.pipe(
-      switchMap(() => new Observable(observer => {
-        this.client.end(force, option, () => {
-          observer.next('ok');
-          observer.complete();
-        });
-      }))
-    );
+  end(force?: boolean, option?: any): MqttClient {
+    return this.client.end(force, option);
   }
 
   /**
@@ -135,10 +121,10 @@ export class NgxMqttClient {
    */
   handleMessage(packet: IConnectPacket): Observable<any> {
     return new Observable(observer => {
-      this.client.handleMessage(packet, (err, resultPacket) => {
+      this.client.handleMessage(packet, (error, resultPacket) => {
         observer.next({
-          err,
-          packet: resultPacket
+          error: !error ? null : error,
+          packet: !resultPacket ? null : resultPacket
         });
         observer.complete();
       });
