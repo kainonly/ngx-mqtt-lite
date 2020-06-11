@@ -3,14 +3,14 @@ import { IClientOptions, IClientReconnectOptions, IClientSubscribeOptions, MqttC
 import { IClientPublishOptions } from 'mqtt/types/lib/client-options';
 import { AsyncSubject, Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ClientCreateResult } from './mqtt-lite.types';
+import { ClientCreateResult, MessageResult } from './mqtt-lite.types';
 
 declare let mqtt: any;
 
 export class NgxMqttClient {
   private client: MqttClient;
   private ready: AsyncSubject<any> = new AsyncSubject<any>();
-  message: Subject<any> = new Subject<any>();
+  message: Subject<MessageResult> = new Subject<MessageResult>();
 
   constructor(
     private host: string,
@@ -36,9 +36,9 @@ export class NgxMqttClient {
         this.ready.next('ok');
         this.ready.complete();
       });
-      this.client.on('message', (name, payload) => {
+      this.client.on('message', (topicName, payload) => {
         this.message.next({
-          name,
+          topic: topicName,
           payload
         });
       });

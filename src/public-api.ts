@@ -3,3 +3,4 @@
  */
 
 export * from './lib/mqtt-lite.service';
+export * from './lib/mqtt-plus';
