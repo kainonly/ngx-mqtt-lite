@@ -122,6 +122,7 @@ export class NgxMqttClient {
   /**
    * Remove a message from the outgoingStore
    */
+  /* istanbul ignore next */
   removeOutgoingMessage(mid: number): MqttClient {
     return this.client.removeOutgoingMessage(mid);
   }
