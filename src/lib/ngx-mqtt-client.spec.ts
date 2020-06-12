@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { MqttLiteService } from 'ngx-mqtt-lite';
+import { factoryPolicyTopic, MqttLiteService } from 'ngx-mqtt-lite';
 import { switchMap } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { NgxMqttClient } from './ngx-mqtt-client';
@@ -18,7 +18,10 @@ describe('testing ngx mqtt client', () => {
   });
 
   it('#create connected should be true', (done) => {
-    client.create(['notification']).subscribe(result => {
+    const topic = factoryPolicyTopic([
+      { topic: 'notification', policy: 0, username: 'kain' }
+    ]);
+    client.create(topic).subscribe(result => {
       expect(result.client.connected).toBe(true);
       done();
     });
@@ -84,7 +87,12 @@ describe('testing ngx mqtt client', () => {
     expect(client.reconnect()).not.toBeNull();
   });
 
-  it('#end', () => {
-    expect(client.end()).not.toBeNull();
+  it('#end and destory', () => {
+    try {
+      expect(client.end()).not.toBeNull();
+      client.destory();
+    } catch (e) {
+      expect(e).toBeNull();
+    }
   });
 });
