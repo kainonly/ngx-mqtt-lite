@@ -1,15 +1,21 @@
-import { IConnectPacket } from 'mqtt-packet';
 import { IClientOptions, IClientReconnectOptions, IClientSubscribeOptions, MqttClient } from 'mqtt/types';
 import { IClientPublishOptions } from 'mqtt/types/lib/client-options';
 import { AsyncSubject, Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { ClientCreateResult, MessageResult } from './mqtt-lite.types';
+import {
+  ClientCreateResult, EndOption,
+  HandleMessageResult,
+  MessageResult,
+  Packet,
+  PublishResult,
+  SubscribeResult, UnsubscribeOption, UnsubscribeResult
+} from './mqtt-lite.types';
 
 declare let mqtt: any;
 
 export class NgxMqttClient {
   private client: MqttClient;
-  private ready: AsyncSubject<any> = new AsyncSubject<any>();
+  ready: AsyncSubject<MqttClient> = new AsyncSubject<MqttClient>();
   message: Subject<MessageResult> = new Subject<MessageResult>();
 
   constructor(
@@ -33,13 +39,14 @@ export class NgxMqttClient {
           packet
         });
         observer.complete();
-        this.ready.next('ok');
+        this.ready.next(this.client);
         this.ready.complete();
       });
-      this.client.on('message', (topicName, payload) => {
+      this.client.on('message', (topicName, payload, packet) => {
         this.message.next({
           topic: topicName,
-          payload
+          payload,
+          packet
         });
       });
     });
@@ -48,12 +55,16 @@ export class NgxMqttClient {
   /**
    * Publish a message to a topic
    */
-  publish(topic: string, message: string, option?: IClientPublishOptions): Observable<any> {
+  publish(topic: string, message: string, option?: IClientPublishOptions): Observable<PublishResult> {
     return this.ready.pipe(
-      switchMap(() => new Observable(observer => {
-        this.client.publish(topic, message, option, (error) => {
+      switchMap(() => new Observable<PublishResult>(observer => {
+        this.client.publish(topic, message, option, (error, packet: Packet) => {
+          if (!error) {
+            error = null;
+          }
           observer.next({
-            error: !error ? null : error
+            error,
+            packet
           });
           observer.complete();
         });
@@ -64,10 +75,13 @@ export class NgxMqttClient {
   /**
    * Subscribe to a topic or topics
    */
-  subscribe(topic: string | string[], option?: IClientSubscribeOptions): Observable<any> {
+  subscribe(topic: string | string[], option?: IClientSubscribeOptions): Observable<SubscribeResult> {
     return this.ready.pipe(
-      switchMap(() => new Observable(observer => {
+      switchMap(() => new Observable<SubscribeResult>(observer => {
         this.client.subscribe(topic, option, (error, granted) => {
+          if (!error) {
+            error = null;
+          }
           observer.next({
             error,
             granted
@@ -81,10 +95,13 @@ export class NgxMqttClient {
   /**
    * Unsubscribe from a topic or topics
    */
-  unsubscribe(topic: string | string[], option?: any): Observable<any> {
+  unsubscribe(topic: string | string[], option?: UnsubscribeOption): Observable<UnsubscribeResult> {
     return this.ready.pipe(
-      switchMap(() => new Observable(observer => {
+      switchMap(() => new Observable<UnsubscribeResult>(observer => {
         this.client.unsubscribe(topic, option, (error, packet) => {
+          if (!error) {
+            error = null;
+          }
           observer.next({
             error,
             packet
@@ -98,7 +115,7 @@ export class NgxMqttClient {
   /**
    * Close the client, accepts the following options
    */
-  end(force?: boolean, option?: any): MqttClient {
+  end(force?: boolean, option?: EndOption): MqttClient {
     return this.client.end(force, option);
   }
 
@@ -119,12 +136,15 @@ export class NgxMqttClient {
   /**
    * Handle messages with backpressure support, one at a time
    */
-  handleMessage(packet: IConnectPacket): Observable<any> {
-    return new Observable(observer => {
+  handleMessage(packet: Packet): Observable<HandleMessageResult> {
+    return new Observable<HandleMessageResult>(observer => {
       this.client.handleMessage(packet, (error, resultPacket) => {
+        if (!error) {
+          error = null;
+        }
         observer.next({
-          error: !error ? null : error,
-          packet: !resultPacket ? null : resultPacket
+          error,
+          packet: resultPacket
         });
         observer.complete();
       });
@@ -134,9 +154,19 @@ export class NgxMqttClient {
   /**
    * get last message id. This is for sent messages only
    */
-  getLastMessageId(): Observable<any> {
+  getLastMessageId(): Observable<number> {
     return this.ready.pipe(
       switchMap(() => of(this.client.getLastMessageId()))
     );
+  }
+
+  /**
+   * destory client
+   */
+  destory() {
+    this.client.end();
+    this.client.removeAllListeners();
+    this.ready.unsubscribe();
+    this.message.unsubscribe();
   }
 }

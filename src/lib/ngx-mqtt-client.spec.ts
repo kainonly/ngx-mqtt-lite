@@ -12,7 +12,7 @@ describe('testing ngx mqtt client', () => {
     if (!service) {
       TestBed.configureTestingModule({ providers: [MqttLiteService] });
       service = TestBed.get(MqttLiteService);
-      service.registerClient('default', 'wss://mqtt.kainonly.com/mqtt');
+      service.registerClient('default', 'wss://mqtt.kainonly.com/mqtt', {});
     }
     client = service.client('default');
   });
@@ -54,15 +54,24 @@ describe('testing ngx mqtt client', () => {
     });
   });
 
-  it('#reconnect', () => {
-    expect(client.reconnect()).not.toBeNull();
+  it('#getLastMessageId', (done) => {
+    client.getLastMessageId().subscribe(result => {
+      expect(result).not.toBeNull();
+      done();
+    });
   });
 
   it('#handleMessage', (done) => {
-    // client.handleMessage()
-    client.publish('notification', 'handle').pipe(
+    timer(1000).pipe(
+      switchMap(() => client.publish('notification', 'kain'))
+    ).subscribe(result => {
+      expect(result.error).toBeNull();
+    });
+    client.message.pipe(
       switchMap(result => {
-        expect(result.error).toBeNull();
+        if (result.topic === 'notification') {
+          expect(result.payload.toString()).toBe('kain');
+        }
         return client.handleMessage(result.packet);
       })
     ).subscribe(result => {
@@ -71,11 +80,8 @@ describe('testing ngx mqtt client', () => {
     });
   });
 
-  it('#getLastMessageId', (done) => {
-    client.getLastMessageId().subscribe(result => {
-      expect(result).not.toBeNull();
-      done();
-    });
+  it('#reconnect', () => {
+    expect(client.reconnect()).not.toBeNull();
   });
 
   it('#end', () => {

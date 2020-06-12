@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 declare let mqtt: any;
 
 export class NgxMqttStore {
-  private store: Store;
+  store: Store;
 
   constructor(option: IStoreOptions) {
     this.store = mqtt.Store(option);
