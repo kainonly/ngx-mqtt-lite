@@ -12,3 +12,17 @@ A Lite Wrapper Around MQTT.js for Angular
 ```shell
 npm install ngx-mqtt-lite --save
 ```
+
+### Configuration
+
+Add scripts in `angular.json`
+
+```json
+[
+  {
+    "scripts": [
+      "./node_modules/mqtt/dist/mqtt.min.js"
+    ]
+  }
+]
+```
