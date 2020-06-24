@@ -1,27 +1,39 @@
 import { TestBed } from '@angular/core/testing';
-import { factoryPolicyTopic, MqttLiteService } from 'ngx-mqtt-lite';
+import { factoryPolicyTopic, NgxMqttLiteService } from 'ngx-mqtt-lite';
 import { switchMap } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { NgxMqttClient } from './ngx-mqtt-client';
 
 describe('testing ngx mqtt client', () => {
-  let service: MqttLiteService;
+  let service: NgxMqttLiteService;
   let client: NgxMqttClient;
 
   beforeEach(() => {
     if (!service) {
-      TestBed.configureTestingModule({ providers: [MqttLiteService] });
-      service = TestBed.get(MqttLiteService);
-      service.registerClient('default', 'wss://mqtt.kainonly.com/mqtt', {});
+      TestBed.configureTestingModule({ providers: [NgxMqttLiteService] });
+      service = TestBed.get(NgxMqttLiteService);
+      service.loadScript('https://unpkg.com/mqtt@4.1.0/dist/mqtt.min.js');
     }
-    client = service.client('default');
+  });
+
+  it('#register client', (done) => {
+    service.registerClient('default', 'wss://mqtt.kainonly.com/mqtt', {
+      username: '5a90afb1-2ab1-4b50-a12d-43281a988cfb',
+      password: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTI5Njc5NTF9.0ndmcKT9BwcDxeXupzAYx5pCsTHbW5Ge5t5ta21tSaI'
+    }).subscribe(status => {
+      expect(status).toBeTruthy();
+      client = service.client('default');
+      done();
+    });
   });
 
   it('#create connected should be true', (done) => {
     const topic = factoryPolicyTopic([
       { topic: 'notification', policy: 0, username: 'kain' }
     ]);
-    client.create(topic).subscribe(result => {
+    timer(1000).pipe(
+      switchMap(() => client.create(topic))
+    ).subscribe(result => {
       expect(result.client.connected).toBe(true);
       done();
     });
@@ -94,5 +106,10 @@ describe('testing ngx mqtt client', () => {
     } catch (e) {
       expect(e).toBeNull();
     }
+  });
+
+  it('#unregister client', () => {
+    const result = service.unregisterClient('default');
+    expect(result).toBeTruthy();
   });
 });

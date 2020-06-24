@@ -1,4 +1,4 @@
-import { PolicyTopicOption } from './mqtt-lite.types';
+import { PolicyTopicOption } from './ngx-mqtt-lite.types';
 
 const factoryPolicyTopic = (data: PolicyTopicOption[]): string[] => {
   const topic = [];
