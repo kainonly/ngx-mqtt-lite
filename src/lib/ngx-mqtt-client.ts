@@ -3,15 +3,16 @@ import { IClientPublishOptions } from 'mqtt/types/lib/client-options';
 import { AsyncSubject, Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import {
-  ClientCreateResult, EndOption,
+  ClientCreateResult,
+  EndOption,
   HandleMessageResult,
   MessageResult,
   Packet,
   PublishResult,
-  SubscribeResult, UnsubscribeOption, UnsubscribeResult
-} from './mqtt-lite.types';
-
-declare let mqtt: any;
+  SubscribeResult,
+  UnsubscribeOption,
+  UnsubscribeResult
+} from './ngx-mqtt-lite.types';
 
 export class NgxMqttClient {
   private client: MqttClient;
@@ -19,6 +20,7 @@ export class NgxMqttClient {
   message: Subject<MessageResult> = new Subject<MessageResult>();
 
   constructor(
+    private mqtt: any,
     private host: string,
     private option?: IClientOptions
   ) {
@@ -29,7 +31,7 @@ export class NgxMqttClient {
    */
   create(topic?: string[]): Observable<ClientCreateResult> {
     return new Observable<any>(observer => {
-      this.client = mqtt.connect(this.host, this.option);
+      this.client = this.mqtt.connect(this.host, this.option);
       this.client.on('connect', (packet) => {
         if (topic !== undefined) {
           this.client.subscribe(topic);
@@ -122,6 +124,7 @@ export class NgxMqttClient {
   /**
    * Remove a message from the outgoingStore
    */
+
   /* istanbul ignore next */
   removeOutgoingMessage(mid: number): MqttClient {
     return this.client.removeOutgoingMessage(mid);

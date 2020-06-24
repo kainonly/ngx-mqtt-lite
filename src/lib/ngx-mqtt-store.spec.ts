@@ -1,30 +1,43 @@
 import { TestBed } from '@angular/core/testing';
-import { factoryPolicyTopic, MqttLiteService } from 'ngx-mqtt-lite';
+import { factoryPolicyTopic, NgxMqttLiteService } from 'ngx-mqtt-lite';
 import { switchMap } from 'rxjs/operators';
 import { timer } from 'rxjs';
-import { Packet } from './mqtt-lite.types';
+import { Packet } from './ngx-mqtt-lite.types';
 import { NgxMqttClient } from './ngx-mqtt-client';
 import { NgxMqttStore } from './ngx-mqtt-store';
 
 describe('testing ngx mqtt store', () => {
-  let service: MqttLiteService;
+  let service: NgxMqttLiteService;
   let client: NgxMqttClient;
   let store: NgxMqttStore;
   let outgoingPacket: Packet;
 
   beforeEach(() => {
     if (!service) {
-      TestBed.configureTestingModule({ providers: [MqttLiteService] });
-      service = TestBed.get(MqttLiteService);
-      service.registerStore('default', {
-        clean: false
-      });
-      service.registerClient('default', 'wss://mqtt.kainonly.com/mqtt', {
-        incomingStore: service.store('default').store
-      });
+      TestBed.configureTestingModule({ providers: [NgxMqttLiteService] });
+      service = TestBed.get(NgxMqttLiteService);
+      service.loadScript('https://unpkg.com/mqtt@4.1.0/dist/mqtt.min.js');
     }
-    client = service.client('default');
-    store = service.store('default');
+  });
+
+  it('#register store', (done) => {
+    service.registerStore('default', {
+      clean: false
+    }).pipe(
+      switchMap(status => {
+        expect(status).toBeTruthy();
+        store = service.store('default');
+        return service.registerClient('default', 'wss://mqtt.kainonly.com/mqtt', {
+          username: '5a90afb1-2ab1-4b50-a12d-43281a988cfb',
+          password: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTI5Njc5NTF9.0ndmcKT9BwcDxeXupzAYx5pCsTHbW5Ge5t5ta21tSaI',
+          incomingStore: store.store
+        });
+      })
+    ).subscribe(status => {
+      expect(status).toBeTruthy();
+      client = service.client('default');
+      done();
+    });
   });
 
   it('#create connected should be true', (done) => {
@@ -70,5 +83,10 @@ describe('testing ngx mqtt store', () => {
       expect(result).toBe('ok');
       done();
     });
+  });
+
+  it('#unregister store', () => {
+    const result = service.unregisterStore('default');
+    expect(result).toBeTruthy();
   });
 });

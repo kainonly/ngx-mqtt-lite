@@ -2,12 +2,13 @@ import { Store } from 'mqtt/types';
 import { IStoreOptions } from 'mqtt/types/lib/store-options';
 import { Observable } from 'rxjs';
 
-declare let mqtt: any;
-
 export class NgxMqttStore {
   store: Store;
 
-  constructor(option: IStoreOptions) {
+  constructor(
+    mqtt: any,
+    option: IStoreOptions
+  ) {
     this.store = mqtt.Store(option);
   }
 
