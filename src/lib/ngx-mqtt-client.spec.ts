@@ -11,7 +11,7 @@ describe('testing ngx mqtt client', () => {
   beforeEach(() => {
     if (!service) {
       TestBed.configureTestingModule({ providers: [NgxMqttLiteService] });
-      service = TestBed.get(NgxMqttLiteService);
+      service = TestBed.inject(NgxMqttLiteService);
       service.loadScript('https://unpkg.com/mqtt@4.1.0/dist/mqtt.min.js');
     }
   });
