@@ -7,7 +7,7 @@ import {
   IUnsubackPacket,
   IUnsubscribePacket
 } from 'mqtt-packet';
-import { ISubscriptionGrant, MqttClient } from 'mqtt/types';
+import { ISubscriptionGrant, MqttClient } from 'mqtt';
 
 export declare type Packet = IConnectPacket |
   IPublishPacket |

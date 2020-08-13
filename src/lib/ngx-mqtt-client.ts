@@ -1,5 +1,4 @@
-import { IClientOptions, IClientReconnectOptions, IClientSubscribeOptions, MqttClient } from 'mqtt/types';
-import { IClientPublishOptions } from 'mqtt/types/lib/client-options';
+import { IClientOptions, IClientReconnectOptions, IClientSubscribeOptions, MqttClient, IClientPublishOptions } from 'mqtt';
 import { AsyncSubject, Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import {
