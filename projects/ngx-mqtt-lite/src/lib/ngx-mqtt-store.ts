@@ -1,5 +1,4 @@
 import { Store } from 'mqtt/types';
-import { IStoreOptions } from 'mqtt/types/lib/store-options';
 import { Observable } from 'rxjs';
 
 export class NgxMqttStore {
@@ -7,7 +6,7 @@ export class NgxMqttStore {
 
   constructor(
     mqtt: any,
-    option: IStoreOptions
+    option: any
   ) {
     this.store = mqtt.Store(option);
   }

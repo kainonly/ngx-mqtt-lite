@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { IClientOptions } from 'mqtt';
-import { IStoreOptions } from 'mqtt/types/lib/store-options';
 import { AsyncSubject, fromEvent, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NgxMqttClient } from './ngx-mqtt-client';
@@ -68,7 +67,7 @@ export class NgxMqttLiteService {
   /**
    * register in-memory implementation of the message store
    */
-  registerStore(id: string, option: IStoreOptions): Observable<boolean> {
+  registerStore(id: string, option: any): Observable<boolean> {
     return this.loaded.pipe(
       map(plugins => {
         this.stores.set(id, new NgxMqttStore(plugins, option));

@@ -1,5 +1,4 @@
-import { IClientOptions, IClientReconnectOptions, IClientSubscribeOptions, MqttClient } from 'mqtt/types';
-import { IClientPublishOptions } from 'mqtt/types/lib/client-options';
+import { IClientOptions, IClientReconnectOptions, IClientSubscribeOptions, MqttClient } from 'mqtt';
 import { AsyncSubject, Observable, of, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import {
@@ -57,7 +56,7 @@ export class NgxMqttClient {
   /**
    * Publish a message to a topic
    */
-  publish(topic: string, message: string, option?: IClientPublishOptions): Observable<PublishResult> {
+  publish(topic: string, message: string, option?: any): Observable<PublishResult> {
     return this.ready.pipe(
       switchMap(() => new Observable<PublishResult>(observer => {
         this.client.publish(topic, message, option, (error, packet: Packet) => {
