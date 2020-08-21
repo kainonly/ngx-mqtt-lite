@@ -1,4 +1,4 @@
-import { Store } from 'mqtt/types';
+import { Store } from 'mqtt';
 import { Observable } from 'rxjs';
 
 export class NgxMqttStore {
