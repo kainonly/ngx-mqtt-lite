@@ -116,5 +116,8 @@
       }
     }
   },
-  "defaultProject": "ngx-mqtt-lite-case"
+  "defaultProject": "ngx-mqtt-lite-case",
+  "cli": {
+    "analytics": false
+  }
 }

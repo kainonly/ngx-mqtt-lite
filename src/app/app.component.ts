@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.mqtt.registerClient('default', 'wss://mqtt.kainonly.com/mqtt', {
       username: '5a90afb1-2ab1-4b50-a12d-43281a988cfb',
-      password: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1OTI5Njc5NTF9.0ndmcKT9BwcDxeXupzAYx5pCsTHbW5Ge5t5ta21tSaI'
+      password: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDQzNjY3NTd9.QLTE6bGThleM-AKQoe0EHQds0YXnJKUK1gnGw74S01Y'
     }).subscribe(status => {
       console.log(status);
     });
