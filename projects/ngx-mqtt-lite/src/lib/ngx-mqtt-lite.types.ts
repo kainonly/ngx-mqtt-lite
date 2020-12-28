@@ -1,28 +1,38 @@
 import {
   IConnackPacket,
-  IConnectPacket, IDisconnectPacket, IPingreqPacket, IPingrespPacket, IPubackPacket, IPubcompPacket,
-  IPublishPacket, IPubrecPacket, IPubrelPacket,
+  IConnectPacket,
+  IDisconnectPacket,
+  IPingreqPacket,
+  IPingrespPacket,
+  IPubackPacket,
+  IPubcompPacket,
+  IPublishPacket,
+  IPubrecPacket,
+  IPubrelPacket,
   ISubackPacket,
   ISubscribePacket,
   IUnsubackPacket,
-  IUnsubscribePacket
+  IUnsubscribePacket,
+  IAuthPacket
 } from 'mqtt-packet';
 import { ISubscriptionGrant, MqttClient } from 'mqtt';
 
-export declare type Packet = IConnectPacket |
-  IPublishPacket |
-  IConnackPacket |
-  ISubscribePacket |
-  ISubackPacket |
-  IUnsubscribePacket |
-  IUnsubackPacket |
-  IPubackPacket |
-  IPubcompPacket |
-  IPubrelPacket |
-  IPingreqPacket |
-  IPingrespPacket |
-  IDisconnectPacket |
-  IPubrecPacket
+export declare type Packet =
+  | IConnectPacket
+  | IPublishPacket
+  | IConnackPacket
+  | ISubscribePacket
+  | ISubackPacket
+  | IUnsubscribePacket
+  | IUnsubackPacket
+  | IPubackPacket
+  | IPubcompPacket
+  | IPubrelPacket
+  | IPingreqPacket
+  | IPingrespPacket
+  | IDisconnectPacket
+  | IPubrecPacket
+  | IAuthPacket;
 
 export interface ClientCreateResult {
   client: MqttClient;
@@ -42,13 +52,13 @@ export interface PublishResult {
 
 export interface SubscribeResult {
   error: Error;
-  granted: ISubscriptionGrant[]
+  granted: ISubscriptionGrant[];
 }
 
 export interface UnsubscribeOption {
   properties?: {
-    userProperties?: any
-  }
+    userProperties?: any;
+  };
 
   [key: string]: any;
 }
@@ -65,7 +75,7 @@ export interface EndOption {
     reasonString?: string;
     userProperties?: any;
     serverReference?: string;
-  }
+  };
 
   [key: string]: any;
 }
