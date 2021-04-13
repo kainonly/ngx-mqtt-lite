@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { factoryPolicyTopic, NgxMqttLiteService } from 'ngx-mqtt-lite';
 import { switchMap } from 'rxjs/operators';
 import { timer } from 'rxjs';
+import { NgxMqttLiteService } from './ngx-mqtt-lite.service';
+import { factoryPolicyTopic } from './ngx-mqtt-extra';
 import { Packet } from './ngx-mqtt-lite.types';
 import { NgxMqttClient } from './ngx-mqtt-client';
 import { NgxMqttStore } from './ngx-mqtt-store';
