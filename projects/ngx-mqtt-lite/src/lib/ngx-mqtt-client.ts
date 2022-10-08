@@ -18,12 +18,7 @@ export class NgxMqttClient {
   ready: AsyncSubject<MqttClient> = new AsyncSubject<MqttClient>();
   message: Subject<MessageResult> = new Subject<MessageResult>();
 
-  constructor(
-    private mqtt: any,
-    private host: string,
-    private option?: IClientOptions
-  ) {
-  }
+  constructor(private mqtt: any, private host: string, private option?: IClientOptions) {}
 
   /**
    * Connects to the broker, And automatically subscribe to topics
@@ -31,7 +26,7 @@ export class NgxMqttClient {
   create(topic?: string[]): Observable<ClientCreateResult> {
     return new Observable<any>(observer => {
       this.client = this.mqtt.connect(this.host, this.option);
-      this.client.on('connect', (packet) => {
+      this.client.on('connect', packet => {
         if (topic !== undefined) {
           this.client.subscribe(topic);
         }
@@ -58,18 +53,21 @@ export class NgxMqttClient {
    */
   publish(topic: string, message: string, option?: any): Observable<PublishResult> {
     return this.ready.pipe(
-      switchMap(() => new Observable<PublishResult>(observer => {
-        this.client.publish(topic, message, option, (error, packet: Packet) => {
-          if (!error) {
-            error = null;
-          }
-          observer.next({
-            error,
-            packet
-          });
-          observer.complete();
-        });
-      }))
+      switchMap(
+        () =>
+          new Observable<PublishResult>(observer => {
+            this.client.publish(topic, message, option, (error, packet: Packet) => {
+              if (!error) {
+                error = null;
+              }
+              observer.next({
+                error,
+                packet
+              });
+              observer.complete();
+            });
+          })
+      )
     );
   }
 
@@ -78,18 +76,21 @@ export class NgxMqttClient {
    */
   subscribe(topic: string | string[], option?: IClientSubscribeOptions): Observable<SubscribeResult> {
     return this.ready.pipe(
-      switchMap(() => new Observable<SubscribeResult>(observer => {
-        this.client.subscribe(topic, option, (error, granted) => {
-          if (!error) {
-            error = null;
-          }
-          observer.next({
-            error,
-            granted
-          });
-          observer.complete();
-        });
-      }))
+      switchMap(
+        () =>
+          new Observable<SubscribeResult>(observer => {
+            this.client.subscribe(topic, option, (error, granted) => {
+              if (!error) {
+                error = null;
+              }
+              observer.next({
+                error,
+                granted
+              });
+              observer.complete();
+            });
+          })
+      )
     );
   }
 
@@ -98,18 +99,21 @@ export class NgxMqttClient {
    */
   unsubscribe(topic: string | string[], option?: UnsubscribeOption): Observable<UnsubscribeResult> {
     return this.ready.pipe(
-      switchMap(() => new Observable<UnsubscribeResult>(observer => {
-        this.client.unsubscribe(topic, option, (error, packet) => {
-          if (!error) {
-            error = null;
-          }
-          observer.next({
-            error,
-            packet
-          });
-          observer.complete();
-        });
-      }))
+      switchMap(
+        () =>
+          new Observable<UnsubscribeResult>(observer => {
+            this.client.unsubscribe(topic, option, (error, packet) => {
+              if (!error) {
+                error = null;
+              }
+              observer.next({
+                error,
+                packet: packet as Packet
+              });
+              observer.complete();
+            });
+          })
+      )
     );
   }
 
@@ -147,7 +151,7 @@ export class NgxMqttClient {
         }
         observer.next({
           error,
-          packet: resultPacket
+          packet: resultPacket as Packet
         });
         observer.complete();
       });
@@ -158,9 +162,7 @@ export class NgxMqttClient {
    * get last message id. This is for sent messages only
    */
   getLastMessageId(): Observable<number> {
-    return this.ready.pipe(
-      switchMap(() => of(this.client.getLastMessageId()))
-    );
+    return this.ready.pipe(switchMap(() => of(this.client.getLastMessageId())));
   }
 
   /**

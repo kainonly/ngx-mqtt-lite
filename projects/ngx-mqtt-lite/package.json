@@ -1,10 +1,10 @@
 {
   "name": "ngx-mqtt-lite",
   "description": "A Lite Wrapper Around MQTT.js for Angular",
-  "version": "8.2.1",
+  "version": "6.0.0",
   "peerDependencies": {
-    "@angular/common": "^8.0.0",
-    "@angular/core": "^8.0.0"
+    "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
+    "@angular/core": "^6.0.0-rc.0 || ^6.0.0"
   },
   "dependencies": {
     "mqtt": "^4.0.0"
