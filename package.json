@@ -1,14 +1,14 @@
 {
   "name": "ngx-mqtt-lite",
   "description": "A Lite Wrapper Around MQTT.js for Angular",
-  "version": "11.0.0",
+  "version": "21.0.0",
   "peerDependencies": {
-    "@angular/common": "^11.0.0",
-    "@angular/core": "^11.0.0"
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0"
   },
   "dependencies": {
-    "mqtt": "^4.0.0",
-    "tslib": "^2.0.0"
+    "mqtt": "^5.0.0",
+    "tslib": "^2.8.0"
   },
   "keywords": [
     "angular",
@@ -17,7 +17,7 @@
   ],
   "author": {
     "name": "kain",
-    "email": "zhangtqx@vip.qq.com"
+    "email": "kainpro@foxmail.com"
   },
   "license": "MIT",
   "homepage": "https://github.com/kainonly/ngx-mqtt-lite",
