@@ -1,0 +1,124 @@
+<main class="page">
+  <h1>ngx-mqtt-lite 示例</h1>
+  <p class="intro">
+    Angular 22 zoneless MQTT 客户端示例，演示连接 broker、订阅、发布与消息日志。默认使用 Eclipse
+    公共测试服务器 test.mosquitto.org。
+  </p>
+
+  <section class="panel">
+    <h2>连接</h2>
+    <div class="controls">
+      <label class="field">
+        <span>地址</span>
+        <input
+          type="text"
+          name="url"
+          [ngModel]="url()"
+          (ngModelChange)="url.set($event)"
+          [disabled]="connected()"
+        />
+      </label>
+      <label class="field">
+        <span>用户名</span>
+        <input
+          type="text"
+          name="username"
+          [ngModel]="username()"
+          (ngModelChange)="username.set($event)"
+          [disabled]="connected()"
+        />
+      </label>
+      <label class="field">
+        <span>密码</span>
+        <input
+          type="password"
+          name="password"
+          [ngModel]="password()"
+          (ngModelChange)="password.set($event)"
+          [disabled]="connected()"
+        />
+      </label>
+      @if (connected()) {
+        <button type="button" class="danger" (click)="disconnect()">断开</button>
+      } @else {
+        <button type="button" class="primary" (click)="connect()">连接</button>
+      }
+      <span class="status" [class.online]="connected()">
+        {{ connected() ? '已连接' : '未连接' }}
+      </span>
+    </div>
+    @if (error()) {
+      <p class="error">{{ error() }}</p>
+    }
+  </section>
+
+  <section class="panel">
+    <h2>订阅</h2>
+    <div class="controls">
+      <label class="field">
+        <span>主题</span>
+        <input
+          type="text"
+          name="subscribeTopic"
+          [ngModel]="subscribeTopic()"
+          (ngModelChange)="subscribeTopic.set($event)"
+        />
+      </label>
+      <button type="button" (click)="subscribe()" [disabled]="!connected()">订阅</button>
+    </div>
+    <ul class="topics">
+      @for (topic of topics(); track topic) {
+        <li>
+          <span>{{ topic }}</span>
+          <button type="button" (click)="unsubscribe(topic)" [disabled]="!connected()">退订</button>
+        </li>
+      } @empty {
+        <li class="muted">暂无订阅，连接后可自动重新订阅</li>
+      }
+    </ul>
+  </section>
+
+  <section class="panel">
+    <h2>发布</h2>
+    <div class="controls">
+      <label class="field">
+        <span>主题</span>
+        <input
+          type="text"
+          name="publishTopic"
+          [ngModel]="publishTopic()"
+          (ngModelChange)="publishTopic.set($event)"
+        />
+      </label>
+      <label class="field grow">
+        <span>消息</span>
+        <input
+          type="text"
+          name="publishMessage"
+          [ngModel]="publishMessage()"
+          (ngModelChange)="publishMessage.set($event)"
+        />
+      </label>
+      <button type="button" class="primary" (click)="publish()" [disabled]="!connected()">
+        发布
+      </button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>消息日志</h2>
+    @if (logs().length) {
+      <ul class="logs">
+        @for (log of logs(); track $index) {
+          <li>
+            <span class="time">{{ log.time }}</span>
+            <span class="topic">{{ log.topic }}</span>
+            <span class="payload">{{ log.payload }}</span>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="muted">暂无消息</p>
+    }
+  </section>
+</main>

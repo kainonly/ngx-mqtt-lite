@@ -1,0 +1,149 @@
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.intro {
+  margin: 0 0 24px;
+  color: #666;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #666;
+}
+
+.field.grow {
+  flex: 1;
+  min-width: 200px;
+}
+
+.field input {
+  padding: 6px 10px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button {
+  padding: 6px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: #1677ff;
+  border-color: #1677ff;
+  color: #fff;
+}
+
+button.danger {
+  background: #fff;
+  border-color: #ff4d4f;
+  color: #ff4d4f;
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 12px;
+  background: #f5f5f5;
+  color: #999;
+  font-size: 13px;
+}
+
+.status.online {
+  background: #e6f4ff;
+  color: #1677ff;
+}
+
+.error {
+  margin: 12px 0 0;
+  color: #ff4d4f;
+  font-size: 13px;
+}
+
+.topics,
+.logs {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.topics li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+}
+
+.topics li button {
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.logs li {
+  display: flex;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+
+.logs .time {
+  color: #999;
+  flex-shrink: 0;
+}
+
+.logs .topic {
+  color: #1677ff;
+  flex-shrink: 0;
+}
+
+.logs .payload {
+  word-break: break-all;
+}
+
+.muted {
+  margin: 12px 0 0;
+  color: #999;
+  font-size: 13px;
+}

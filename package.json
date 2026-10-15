@@ -1,31 +1,37 @@
 {
   "name": "ngx-mqtt-lite",
-  "description": "A Lite Wrapper Around MQTT.js for Angular",
-  "version": "21.0.0",
-  "peerDependencies": {
-    "@angular/common": "^21.0.0",
-    "@angular/core": "^21.0.0"
+  "version": "22.2.0",
+  "private": true,
+  "packageManager": "npm@12.0.2",
+  "scripts": {
+    "build": "ng build mqtt --configuration production",
+    "watch": "ng build mqtt --watch --configuration development",
+    "test": "npm run build && ng test mqtt --watch=false && ng test demo --watch=false",
+    "check": "tsc --noEmit -p projects/mqtt/tsconfig.lib.json",
+    "format:check": "prettier --check projects scripts src",
+    "pack": "npm run build && npm pack ./dist/mqtt --pack-destination ./dist",
+    "check:package": "npm run pack && node scripts/check-package.mjs",
+    "demo": "npm run build && ng serve demo",
+    "demo:build": "npm run build && ng build demo --configuration production"
   },
   "dependencies": {
-    "mqtt": "^5.0.0",
-    "tslib": "^2.8.0"
+    "@angular/common": "^22.2.0",
+    "@angular/compiler": "^22.2.0",
+    "@angular/core": "^22.2.0",
+    "@angular/forms": "^22.2.0",
+    "@angular/platform-browser": "^22.2.0",
+    "mqtt": "^5.16.1",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
   },
-  "keywords": [
-    "angular",
-    "mqtt",
-    "ngx-mqtt"
-  ],
-  "author": {
-    "name": "kain",
-    "email": "kainpro@foxmail.com"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/kainonly/ngx-mqtt-lite",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kainonly/ngx-mqtt-lite.git"
-  },
-  "bugs": {
-    "url": "https://github.com/kainonly/ngx-mqtt-lite/issues"
+  "devDependencies": {
+    "@angular/build": "^22.2.2",
+    "@angular/cli": "^22.2.2",
+    "@angular/compiler-cli": "^22.2.0",
+    "jsdom": "^30.0.0",
+    "ng-packagr": "^22.2.0",
+    "prettier": "^3.8.1",
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
   }
 }
